@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
-    "seed": "node src/seed.js"
+    "seed": "node src/seed.js",
+    "tunnel": "ngrok http 4000"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

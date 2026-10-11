@@ -16,7 +16,13 @@ import { rentalsRouter } from "./routes/rentals.js";
 import { reportsRouter } from "./routes/reports.js";
 
 const app = express();
-app.use(cors());
+app.set("trust proxy", true);
+app.use(
+  cors({
+    origin: true,
+    credentials: false,
+  })
+);
 app.use(express.json({ limit: "2mb" }));
 
 app.get("/api/health", (_req, res) => {
@@ -45,8 +51,9 @@ const port = Number(process.env.PORT || 4000);
 initDb()
   .then(() => seedIfEmpty())
   .then(() => {
-    app.listen(port, () => {
+    app.listen(port, "0.0.0.0", () => {
       console.log(`WebGateway API on http://localhost:${port} (MySQL)`);
+      console.log("For ngrok: ngrok http 4000");
     });
   })
   .catch((err) => {
