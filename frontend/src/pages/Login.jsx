@@ -1,19 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api, getApiBase, setApiBase, setSession } from "../api.js";
+import { api, setSession } from "../api.js";
 
 export default function Login() {
   const nav = useNavigate();
   const [email, setEmail] = useState("owner@webgateway.local");
   const [password, setPassword] = useState("admin123");
-  const [apiUrl, setApiUrl] = useState(getApiBase());
   const [err, setErr] = useState("");
 
   async function onSubmit(e) {
     e.preventDefault();
     setErr("");
     try {
-      setApiBase(apiUrl);
       const data = await api("/api/auth/login", { method: "POST", body: { email, password } });
       setSession(data.token, data.user);
       nav("/");
@@ -37,14 +35,6 @@ export default function Login() {
         <label>
           Password
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        </label>
-        <label>
-          API server (ngrok)
-          <input
-            placeholder="Leave empty for this PC · or https://xxxx.ngrok-free.app"
-            value={apiUrl}
-            onChange={(e) => setApiUrl(e.target.value)}
-          />
         </label>
         {err && <div className="err">{err}</div>}
         <button className="btn" type="submit">

@@ -1,28 +1,11 @@
 const KEY = "wg_token";
-const API_KEY = "wg_api";
-
-function captureApiFromUrl() {
-  if (typeof window === "undefined") return;
-  const q = new URLSearchParams(window.location.search).get("api");
-  if (q) {
-    localStorage.setItem(API_KEY, q.replace(/\/$/, ""));
-    const url = new URL(window.location.href);
-    url.searchParams.delete("api");
-    window.history.replaceState({}, "", url.pathname + url.search + url.hash);
-  }
-}
-captureApiFromUrl();
 
 export function getApiBase() {
-  const stored = localStorage.getItem(API_KEY);
-  const env = import.meta.env.VITE_API_URL || "";
-  return String(stored || env).replace(/\/$/, "");
-}
-
-export function setApiBase(url) {
-  const clean = String(url || "").replace(/\/$/, "");
-  if (clean) localStorage.setItem(API_KEY, clean);
-  else localStorage.removeItem(API_KEY);
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    if (host === "localhost" || host === "127.0.0.1") return "";
+  }
+  return String(import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
 }
 
 export function getToken() {
